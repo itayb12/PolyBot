@@ -1,6 +1,9 @@
 import time
 from yt_dlp import YoutubeDL
 from loguru import logger
+import boto3
+import botocore
+import os
 
 
 def search_download_youtube_video(video_name, num_results=1):
@@ -10,9 +13,32 @@ def search_download_youtube_video(video_name, num_results=1):
     :param num_results: integer representing how many videos to download
     :return: list of paths to your downloaded video files
     """
+    #with YoutubeDL() as ydl:
+    #    videos = ydl.extract_info(f"ytsearch{num_results}:{video_name}", download=True)['entries']
+    #return [ydl.prepare_filename(video) for video in videos]
     with YoutubeDL() as ydl:
-        videos = ydl.extract_info(f"ytsearch{num_results}:{video_name}", download=True)['entries']
-
+        videos = ydl.extract_info(f"ytsearch{num_results}:{video_name}", download=False)['entries']
+        for video in videos:
+            key = "dir-1/"
+            file_name = video['title'] + " [" + video['id'] + "].mp4"
+            key_value = key + file_name
+            print(key_value)
+            s3_res = boto3.resource('s3')
+            s3 = boto3.client('s3')
+            try:
+                s3_res.Object('zoharnpolys3', key_value).load()
+            except botocore.exceptions.ClientError as e:
+                if e.response['Error']['Code'] == "404":
+                    print("The object does not exist.")
+                    video_url = video['webpage_url']
+                    ydl.extract_info(video_url, download=True)
+                    s3.upload_file(Bucket='zoharnpolys3', Key=key_value, Filename=file_name)
+                    os.remove(file_name)
+                else:
+                    print("Something else has gone wrong.")
+                    raise
+            else:
+                print("The object does exist.")
     return [ydl.prepare_filename(video) for video in videos]
 
 
