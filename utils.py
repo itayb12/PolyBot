@@ -13,9 +13,11 @@ def search_download_youtube_video(video_name, num_results=1):
     :param num_results: integer representing how many videos to download
     :return: list of paths to your downloaded video files
     """
-    #with YoutubeDL() as ydl:
-    #    videos = ydl.extract_info(f"ytsearch{num_results}:{video_name}", download=True)['entries']
-    #return [ydl.prepare_filename(video) for video in videos]
+    with YoutubeDL() as ydl:
+        videos = ydl.extract_info(f"ytsearch{num_results}:{video_name}", download=True)['entries']
+    return [ydl.prepare_filename(video) for video in videos]
+
+    """
     with YoutubeDL() as ydl:
         videos = ydl.extract_info(f"ytsearch{num_results}:{video_name}", download=False)['entries']
         for video in videos:
@@ -40,6 +42,7 @@ def search_download_youtube_video(video_name, num_results=1):
             else:
                 print("The object does exist.")
     return [ydl.prepare_filename(video) for video in videos]
+"""
 
 
 def calc_backlog_per_instance(sqs_queue_client, asg_client, asg_group_name):
