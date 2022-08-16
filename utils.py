@@ -4,6 +4,7 @@ from loguru import logger
 import boto3
 import botocore
 import os
+import string
 
 
 def search_download_youtube_video(video_name, num_results=1):
@@ -21,8 +22,12 @@ def search_download_youtube_video(video_name, num_results=1):
         videos = ydl.extract_info(f"ytsearch{num_results}:{video_name}", download=False)['entries']
         for video in videos:
             key = "dir-1/"
-            file_name = video['title'] + " [" + video['id'] + "].mp4"
-            file_name = file_name.replace('|', "")
+            video_title = str(video['title'])
+            for char in string.punctuation:
+                video_title = video_title.replace(char, '')
+            file_name = video_title + " [" + video['id'] + "].mp4"
+            #file_name = video['title'] + " [" + video['id'] + "].mp4"
+            #file_name = file_name.replace('|', "")
             key_value = key + file_name
             print(key_value)
             s3_res = boto3.resource('s3')
@@ -50,7 +55,6 @@ def search_download_youtube_video(video_name, num_results=1):
     return [ydl.prepare_filename(video) for video in videos]
 
 
-
 def calc_backlog_per_instance(sqs_queue_client, asg_client, asg_group_name):
     while True:
         msgs_in_queue = int(sqs_queue_client.attributes.get('ApproximateNumberOfMessages'))
@@ -65,6 +69,15 @@ def calc_backlog_per_instance(sqs_queue_client, asg_client, asg_group_name):
 
         logger.info(f'backlog per instance: {backlog_per_instance}')
 
-        # TODO send the backlog_per_instance metric to cloudwatch
-
+        cloudwatch = boto3.client('cloudwatch')
+        cloudwatch.put_metric_data(
+            Namespace='zoharn-polybot-cloudwatch',
+            MetricData=[
+                {
+                    'MetricName': 'backlog_per_instance',
+                    'Value':  backlog_per_instance,
+                    'Unit': 'Count'
+                }
+            ]
+        )
         time.sleep(60)
