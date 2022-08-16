@@ -20,8 +20,7 @@ def process_msg(msg, chatid):
         videoID = strList[len(strList) - 1].split("]", 1)
         bot.send_message(chat_id=chatid, text="youtube.com/watch?v=" + videoID[0])
         #bot.send_video(chat_id=chatid, video=open(path, 'rb'), supports_streaming=True)
-        s3.upload_file(Bucket='zoharnpolys3', Key="dir-1/" + path, Filename=path)
-        os.remove(path)
+        #s3.upload_file(Bucket='zoharnpolys3', Key="dir-1/" + path, Filename=path)
 
 
 def main():

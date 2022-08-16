@@ -13,16 +13,16 @@ def search_download_youtube_video(video_name, num_results=1):
     :param num_results: integer representing how many videos to download
     :return: list of paths to your downloaded video files
     """
-    with YoutubeDL() as ydl:
-        videos = ydl.extract_info(f"ytsearch{num_results}:{video_name}", download=True)['entries']
-    return [ydl.prepare_filename(video) for video in videos]
+    #with YoutubeDL() as ydl:
+    #    videos = ydl.extract_info(f"ytsearch{num_results}:{video_name}", download=True)['entries']
+    #return [ydl.prepare_filename(video) for video in videos]
 
-    """
     with YoutubeDL() as ydl:
         videos = ydl.extract_info(f"ytsearch{num_results}:{video_name}", download=False)['entries']
         for video in videos:
             key = "dir-1/"
             file_name = video['title'] + " [" + video['id'] + "].mp4"
+            file_name = file_name.replace('|', "")
             key_value = key + file_name
             print(key_value)
             s3_res = boto3.resource('s3')
@@ -34,6 +34,11 @@ def search_download_youtube_video(video_name, num_results=1):
                     print("The object does not exist.")
                     video_url = video['webpage_url']
                     ydl.extract_info(video_url, download=True)
+                    files = os.listdir('.')
+                    for f in files:
+                        if '.mp4' in f:
+                            newname = newname.replace('|', "")
+                            newname = newname + 'mp4'
                     s3.upload_file(Bucket='zoharnpolys3', Key=key_value, Filename=file_name)
                     os.remove(file_name)
                 else:
@@ -41,8 +46,9 @@ def search_download_youtube_video(video_name, num_results=1):
                     raise
             else:
                 print("The object does exist.")
+
     return [ydl.prepare_filename(video) for video in videos]
-"""
+
 
 
 def calc_backlog_per_instance(sqs_queue_client, asg_client, asg_group_name):
