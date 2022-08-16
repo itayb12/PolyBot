@@ -37,8 +37,8 @@ def search_download_youtube_video(video_name, num_results=1):
                     files = os.listdir('.')
                     for f in files:
                         if '.mp4' in f:
-                            newname = newname.replace('|', "")
-                            newname = newname + 'mp4'
+                            newname = file_name
+                            os.rename(f, newname)
                     s3.upload_file(Bucket='zoharnpolys3', Key=key_value, Filename=file_name)
                     os.remove(file_name)
                 else:
