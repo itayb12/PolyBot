@@ -4,6 +4,8 @@ import time
 import boto3
 import botocore
 from loguru import logger
+
+import utils
 from utils import search_download_youtube_video
 import telegram
 # from secrets import access_key, secret_access_key
@@ -11,16 +13,23 @@ import telegram
 
 def process_msg(msg, chatid):
     paths = search_download_youtube_video(msg)
-    for path in paths:
-        s3 = boto3.client('s3')
+    #if paths[1] > 2000000000:
+    if paths[1] > 60000:
         with open('.telegramToken') as f:
             _token = f.read()
         bot = telegram.Bot(token=_token)
-        strList = path.split("[")
-        videoID = strList[len(strList) - 1].split("]", 1)
-        bot.send_message(chat_id=chatid, text="youtube.com/watch?v=" + videoID[0])
-        #bot.send_video(chat_id=chatid, video=open(path, 'rb'), supports_streaming=True)
-        #s3.upload_file(Bucket='zoharnpolys3', Key="dir-1/" + path, Filename=path)
+        bot.send_message(chat_id=chatid, text="The file is more than 2GB and won't be uploaded to s3, please select a different video")
+    else:
+        for path in paths[0]:
+            s3 = boto3.client('s3')
+            with open('.telegramToken') as f:
+                _token = f.read()
+            bot = telegram.Bot(token=_token)
+            strList = path.split("[")
+            videoID = strList[len(strList) - 1].split("]", 1)
+            bot.send_message(chat_id=chatid, text="youtube.com/watch?v=" + videoID[0])
+            #bot.send_video(chat_id=chatid, video=open(path, 'rb'), supports_streaming=True)
+            #s3.upload_file(Bucket='zoharnpolys3', Key="dir-1/" + path, Filename=path)
 
 
 def main():
