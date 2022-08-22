@@ -29,10 +29,11 @@ def process_msg(msg, chatid):
             s3 = boto3.client('s3')
             s3.download_file('zoharnpolys3', paths[3], paths[0])
             #bot.send_video(chatid, video=open("c://temp/1.mp4", 'rb'))
-            bot.send_video(chatid, video=open(paths[0], 'rb'))
+            #bot.send_video(chatid, video=open(paths[0], 'rb'))
             files = os.listdir('.')
             for f in files:
                 if '.mp4' in f:
+                    bot.send_video(chatid, video=open(f, 'rb'))
                     os.remove(f)
         elif 45000000 < paths[1] < 2000000000:
             s3 = boto3.client('s3')
