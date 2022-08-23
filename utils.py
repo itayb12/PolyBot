@@ -68,11 +68,11 @@ def search_download_youtube_video(video_name, num_results=1):
                                 ydl.extract_info(video_url, download=True)
                                 files = os.listdir('.')
                                 for f in files:
-                                    if '.mp4' in f:
+                                    if '.mp4' in f and video['id'] in f:
                                         newname = file_name
                                         os.rename(f, newname)
                                 s3.upload_file(Bucket='zoharnpolys3', Key=key_value, Filename=file_name)
-
+                                os.remove(file_name)
                             else:
                                 print("Something else has gone wrong.")
                                 raise
