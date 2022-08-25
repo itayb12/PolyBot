@@ -27,7 +27,7 @@ def process_msg(msg, chatid):
             bot = telegram.Bot(token=_token)
             bot.send_message(chat_id=chatid, text="The video you searched for was uploaded to s3, you will recieve it shortly")
             s3 = boto3.client('s3')
-            s3.download_file('zoharnpolys3', paths[3], paths[0])
+            s3.download_file('polybot-zia-bucket', paths[3], paths[0])
             #bot.send_video(chatid, video=open("c://temp/1.mp4", 'rb'))
             #bot.send_video(chatid, video=open(paths[0], 'rb'))
             files = os.listdir('.')
@@ -60,7 +60,7 @@ def process_msg(msg, chatid):
             #bot.send_message(chat_id=chatid, text="youtube.com/watch?v=" + videoID[0])
             bot.send_message(chat_id=chatid, text="youtube.com/watch?v=" + paths[4])
             #bot.send_video(chat_id=chatid, video=open(path, 'rb'), supports_streaming=True)
-            #s3.upload_file(Bucket='zoharnpolys3', Key="dir-1/" + path, Filename=path)
+            #s3.upload_file(Bucket='polybot-zia-bucket', Key="dir-1/" + path, Filename=path)
 '''
 
 def main():

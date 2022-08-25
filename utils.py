@@ -1,12 +1,10 @@
 import os
 import string
 import time
-
 import boto3
 import botocore
 from loguru import logger
 from yt_dlp import YoutubeDL
-
 
 def search_download_youtube_video(video_name, num_results=1):
     """
@@ -18,6 +16,7 @@ def search_download_youtube_video(video_name, num_results=1):
     #with YoutubeDL() as ydl:
     #    videos = ydl.extract_info(f"ytsearch{num_results}:{video_name}", download=True)['entries']
     #return [ydl.prepare_filename(video) for video in videos]
+
     with YoutubeDL() as ydl:
         flag_file_too_big = False
         flag_is_live = False
@@ -48,7 +47,7 @@ def search_download_youtube_video(video_name, num_results=1):
                             video_title = video_title.replace(char, '')
                         file_name = video_title + " [" + video['id'] + "].mp4"
                     else:
-                        key = "dir-1/"
+                        key = "archive-videos/MP4_Collections/"
                         video_title = str(video['title'])
                         for char in string.punctuation:
                             video_title = video_title.replace(char, '')
@@ -60,7 +59,7 @@ def search_download_youtube_video(video_name, num_results=1):
                         s3_res = boto3.resource('s3')
                         s3 = boto3.client('s3')
                         try:
-                            s3_res.Object('zoharnpolys3', key_value).load()
+                            s3_res.Object('polybot-zia-bucket', key_value).load()
                         except botocore.exceptions.ClientError as e:
                             if e.response['Error']['Code'] == "404":
                                 print("The object does not exist.")
@@ -71,7 +70,7 @@ def search_download_youtube_video(video_name, num_results=1):
                                     if '.mp4' in f and video['id'] in f:
                                         newname = file_name
                                         os.rename(f, newname)
-                                s3.upload_file(Bucket='zoharnpolys3', Key=key_value, Filename=file_name)
+                                s3.upload_file(Bucket='polybot-zia-bucket', Key=key_value, Filename=file_name)
                                 os.remove(file_name)
                             else:
                                 print("Something else has gone wrong.")
@@ -106,7 +105,7 @@ def calc_backlog_per_instance(sqs_queue_client, asg_client, asg_group_name):
 
         cloudwatch = boto3.client('cloudwatch')
         cloudwatch.put_metric_data(
-            Namespace='zoharn-polybot-cloudwatch',
+            Namespace='zia-polybot-cloudwatch',
             MetricData=[
                 {
                     'MetricName': 'backlog_per_instance',
