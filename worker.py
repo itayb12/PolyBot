@@ -12,7 +12,21 @@ import telegram
 
 
 def process_msg(msg, chatid):
+    if msg == "/start":
+        with open('.telegramToken') as f:
+            _token = f.read()
+        bot = telegram.Bot(token=_token)
+        bot.send_message(chat_id=chatid, text="Welcome to our bot! please type in your video request")
+
+        return None
     paths = search_download_youtube_video(msg)
+    if paths[4] == "empty":
+        with open('.telegramToken') as f:
+            _token = f.read()
+        bot = telegram.Bot(token=_token)
+        bot.send_message(chat_id=chatid, text="we couldn't find your video, please type in a different name")
+        return None
+
     #if paths[1] > 2000000000:
     if paths[5] == True:
         with open('.telegramToken') as f:
@@ -25,7 +39,7 @@ def process_msg(msg, chatid):
             with open('.telegramToken') as f:
                 _token = f.read()
             bot = telegram.Bot(token=_token)
-            bot.send_message(chat_id=chatid, text="The video you searched for was uploaded to s3, you will recieve it shortly")
+            bot.send_message(chat_id=chatid, text="The video you searched for was uploaded to s3, you will receive it shortly")
             s3 = boto3.client('s3')
             s3.download_file('polybot-zia-bucket', paths[3], paths[0])
             #bot.send_video(chatid, video=open("c://temp/1.mp4", 'rb'))
@@ -35,7 +49,7 @@ def process_msg(msg, chatid):
                 if '.mp4' in f:
                     bot.send_video(chatid, video=open(f, 'rb'))
                     os.remove(f)
-        elif 45000000 < paths[1] < 2000000000:
+        elif 45000000 < paths[1] < 3000000000:
             s3 = boto3.client('s3')
             with open('.telegramToken') as f:
                 _token = f.read()
