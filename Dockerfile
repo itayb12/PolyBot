@@ -5,3 +5,4 @@ ENV export AWS_DEFAULT_REGION=eu-west-1
 RUN pip3 install --upgrade pip
 RUN pip install -r requirements.txt
 CMD ["python3", "worker.py"]
+

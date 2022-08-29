@@ -115,3 +115,4 @@ def calc_backlog_per_instance(sqs_queue_client, asg_client, asg_group_name):
             ]
         )
         time.sleep(60)
+
