@@ -2,7 +2,7 @@
    "TargetValue":10,
    "CustomizedMetricSpecification":{
       "MetricName":"backlog_per_instance",
-      "Namespace":"zoharn-polybot-cloudwatch",
+      "Namespace":"ZIAver2-polybot-cloudwatch",
       "Statistic":"Average",
       "Unit":"Count"
    }

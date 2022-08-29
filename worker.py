@@ -8,10 +8,13 @@ from loguru import logger
 from utils import search_download_youtube_video
 from yt_dlp import YoutubeDL
 import telegram
-my_bucket = "zoharnpolys3"
+
+
+my_bucket = "polybot-zia-bucket"
 
 
 def fix_file_name(file_name):
+    """This function remove unwanted symbols from the file name so the upload to s3 won't break"""
     file_name = str(file_name)
     for char in string.punctuation:
         file_name = file_name.replace(char, "")
@@ -20,6 +23,7 @@ def fix_file_name(file_name):
 
 
 def check_bucket_for_file(key, file_name):
+    """Checking if there are no identical file inside S3 """
     s3_res = boto3.resource('s3')
     s3 = boto3.client('s3')
 
@@ -32,6 +36,7 @@ def check_bucket_for_file(key, file_name):
 
 
 def upload_file_to_bucket(key, file_full_path):
+    """Uploading file to the bucket"""
     #s3_res = boto3.resource('s3')
     s3 = boto3.client('s3')
 
@@ -40,6 +45,7 @@ def upload_file_to_bucket(key, file_full_path):
 
 
 def download_from_bucket_and_send(key, file_path, bot, chatid, videoid):
+    """The function checking the size of the file and send the video if it is below 50MB (API limit) or a link """
     s3 = boto3.client('s3')
 
     response = s3.head_object(Bucket = my_bucket, Key = key + file_path)
@@ -53,7 +59,7 @@ def download_from_bucket_and_send(key, file_path, bot, chatid, videoid):
 
 
 def process_msg(msg, chatid):
-    key = "Videos/"
+    key = "archive-videos/MP4_Collections/"
     with open('.telegramToken') as f:
         _token = f.read()
     bot = telegram.Bot(token=_token)
@@ -73,18 +79,27 @@ def process_msg(msg, chatid):
                 if video['is_live'] == True:
                     bot.send_message(chat_id=chatid, text="youtube.com/watch?v=" + video['id'])
                 else:
+
                     # remove chars from file name so file upload to s3 won't crash
+
                     file_name = fix_file_name(video['title']) + " [" + video['id'] + "].mp4"
+
                     # check "filesize" to determine the following conditions:
+
                     if "filesize" not in video:
                         video['filesize'] = video['filesize_approx']
                     if "filesize" in video:
                         if video["filesize"] is None:
                             video["filesize"] = 3100000000
+
                         # if "filesize" > 3GB don't download the video and don't upload to s3, send video link instead
+
                         if video['filesize'] > 1024 * 1024 * 1024 * 3:
                             bot.send_message(chat_id=chatid, text="youtube.com/watch?v=" + video['id'])
-                        # if "filesize" > 50MB: check if exist in s3 already, download video if not and upload it to s3, send video link
+
+                        # if "filesize" > 50MB: check if exist in s3 already, download video
+                        # if not and upload it to s3,send video link
+
                         elif video['filesize'] > 1024 * 1024 * 50:
                             if check_bucket_for_file(key, file_name) == True:
                                 bot.send_message(chat_id=chatid, text="youtube.com/watch?v=" + video['id'])
@@ -98,7 +113,10 @@ def process_msg(msg, chatid):
                                     os.remove(file_name)
 
                         else:
-                            # if "filesize" < 50MB: check if exist in s3 already, download video if not and upload it to s3, send video back
+
+                            # if "filesize" < 50MB: check if exist in s3 already, download video if not and upload it
+                            # to s3, send video back
+
                             if check_bucket_for_file(key, file_name) == True:
                                 download_from_bucket_and_send(key, file_name, bot, chatid, video['id'])
 
@@ -125,11 +143,14 @@ def main():
             )
 
             for msg in messages:
+
                 # logger.info("hey this is chat id: " + msg.message_attributes.get('chat_id').get('StringValue'))
+
                 logger.info(f'processing message {msg}')
                 process_msg(msg.body, msg.message_attributes.get('chat_id').get('StringValue'))
 
                 # delete message from the queue after it was handled
+
                 response = queue.delete_messages(Entries=[{
                     'Id': msg.message_id,
                     'ReceiptHandle': msg.receipt_handle

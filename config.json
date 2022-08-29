@@ -1,5 +1,5 @@
 {
   "aws_region": "eu-west-1",
-  "bot_to_worker_queue_name": "ZoharN-Polybot-Queue",
-  "autoscaling_group_name": "ZoharN-Polybot-Auto-Scaling-Group"
+  "bot_to_worker_queue_name": "ZIA-Polybot_SQS",
+  "autoscaling_group_name": "ZIA-Polybot_autoscaling_group"
 }

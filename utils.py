@@ -36,7 +36,7 @@ def calc_backlog_per_instance(sqs_queue_client, asg_client, asg_group_name):
 
         cloudwatch = boto3.client('cloudwatch')
         cloudwatch.put_metric_data(
-            Namespace='zoharn-polybot-cloudwatch',
+            Namespace='ZIAver2-polybot-cloudwatch',
             MetricData=[
                 {
                     'MetricName': 'backlog_per_instance',
