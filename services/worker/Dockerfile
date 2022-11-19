@@ -1,7 +1,7 @@
 FROM python:3.9-slim-bullseye
 WORKDIR /app
-ENV APP_PATH=services/worker
+#ENV APP_PATH=services/worker
 COPY . .
-RUN pip install -r $APP_PATH/requirements.txt
+RUN pip install -r requirements.txt
 
-CMD ["python3", "$APP_PATH/app.py"]
+CMD ["python3", "app.py"]
