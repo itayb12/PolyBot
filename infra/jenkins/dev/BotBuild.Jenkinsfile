@@ -26,7 +26,7 @@ pipeline {
                 sh '''
                 aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin $REGISTRY_URL
                 cd $WORKSPACE
-                docker build -t $IMAGE_NAME:$IMAGE_TAG .
+                docker build -t $IMAGE_NAME:$IMAGE_TAG . -f services/bot/Dockerfile
                 '''
             }
         }
