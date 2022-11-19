@@ -7,4 +7,4 @@ CMD ["python3", "services/bot/app.py"]
 
 
 #CMD ["python3", "app.py"]
-#
+#*
