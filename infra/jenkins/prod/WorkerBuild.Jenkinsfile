@@ -11,15 +11,13 @@ pipeline {
     buildDiscarder(logRotator(daysToKeepStr: '30'))
     disableConcurrentBuilds()
     timestamps()
-
     }
 
     environment {
     REGISTRY_URL = "352708296901.dkr.ecr.eu-west-1.amazonaws.com"
     IMAGE_TAG = "0.0.$BUILD_NUMBER"
     IMAGE_NAME = "zoharn007-worker"
-    WORKSPACE = "/home/ec2-user/workspace/prod/WorkerBuild/
-
+    WORKSPACE = "/home/ec2-user/workspace/prod/WorkerBuild/"
     }
 
     stages {
@@ -28,7 +26,9 @@ pipeline {
 
                 sh '''
                 aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin $REGISTRY_URL
-                cd /home/ec2-user/workspace/prod/WorkerBuild/services/worker/
+                ls
+                pwd
+                cd $WORKSPACE
                 docker build -t $IMAGE_NAME:$IMAGE_TAG . -f services/worker/Dockerfile
 
                 '''
