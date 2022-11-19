@@ -23,7 +23,7 @@ pipeline {
     }
 
     stages {
-        stage('workerBuild') {
+        stage('WorkerBuild') {
             steps {
 
                 sh '''
