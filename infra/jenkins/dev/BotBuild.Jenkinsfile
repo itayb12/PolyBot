@@ -34,7 +34,7 @@ pipeline {
         stage('Snyx Check') {
             steps {
                 withCredentials([string(credentialsId: 'Snyx', variable: 'SNYK_TOKEN')]) {
-                    sh 'snyk container test $IMAGE_NAME:$IMAGE_TAG --severity-threshold=critical --file=/home/ec2-user/workspace/dev/botBuild/services/bot/Dockerfile'
+                    sh 'snyk container test $REGISTRY_URL/$IMAGE_NAME:$IMAGE_TAG --severity-threshold=critical --file=/home/ec2-user/workspace/dev/botBuild/services/bot/Dockerfile'
                 }
             }
         }
