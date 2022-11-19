@@ -40,7 +40,7 @@ pipeline {
     stage('Snyx Check') {
     steps {
             withCredentials([string(credentialsId: 'Snyx', variable: 'SNYK_TOKEN')]) {
-                sh 'snyk container test $IMAGE_NAME:$IMAGE_TAG --severity-threshold=critical --file=/home/ec2-user/workspace/dev/WorkerBuild/services/bot/Dockerfile'
+                sh 'snyk container test $IMAGE_NAME:$IMAGE_TAG --severity-threshold=critical --file=/home/ec2-user/workspace/dev/WorkerBuild/services/worker/Dockerfile'
             }
         }
     }
@@ -62,7 +62,7 @@ pipeline {
         }
    }
 
-        stage('Trigger workerDeploy') {
+        stage('Trigger WorkerDeploy') {
             steps {
                 build job: 'workerDeploy', wait: false, parameters: [
                     string(name: 'WORKER_IMAGE_NAME', value: "${REGISTRY_URL}/${IMAGE_NAME}:${IMAGE_TAG}")
