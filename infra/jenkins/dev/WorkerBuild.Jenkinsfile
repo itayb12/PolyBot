@@ -28,6 +28,8 @@ pipeline {
 
                 sh '''
                 aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin $REGISTRY_URL
+                ls
+                pwd
                 cd /home/ec2-user/workspace/dev/WorkerBuild/services/worker/
                 docker build -t $IMAGE_NAME:$IMAGE_TAG .
 
