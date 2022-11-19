@@ -11,5 +11,5 @@ CMD ["python3", "services/worker/app.py"]
 #ENV APP_PATH=services/worker
 #COPY . .
 #RUN pip install -r requirements.txt
-
+#
 #CMD ["python3", "app.py"]
