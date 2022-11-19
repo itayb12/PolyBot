@@ -19,7 +19,6 @@ pipeline {
     IMAGE_TAG = "0.0.$BUILD_NUMBER"
     IMAGE_NAME = "zoharn007-worker"
     WORKSPACE = "/home/ec2-user/workspace/dev/WorkerBuild/
-
     }
 
     stages {
