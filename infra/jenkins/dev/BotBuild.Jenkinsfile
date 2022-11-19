@@ -25,7 +25,7 @@ pipeline {
             steps {
                 sh '''
                 aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin $REGISTRY_URL
-                cd /home/ec2-user/workspace/dev/botBuild/services/bot/
+                cd /home/ec2-user/workspace/dev/BotBuild/services/bot/
                 docker build -t $IMAGE_NAME:$IMAGE_TAG .
                 '''
             }
@@ -34,7 +34,7 @@ pipeline {
         stage('Snyx Check') {
             steps {
                 withCredentials([string(credentialsId: 'Snyx', variable: 'SNYK_TOKEN')]) {
-                    sh 'snyk container test $IMAGE_NAME:$IMAGE_TAG --severity-threshold=critical --file=/home/ec2-user/workspace/dev/botBuild/services/bot/Dockerfile'
+                    sh 'snyk container test $IMAGE_NAME:$IMAGE_TAG --severity-threshold=critical --file=/home/ec2-user/workspace/dev/BotBuild/services/bot/Dockerfile'
                 }
             }
         }
