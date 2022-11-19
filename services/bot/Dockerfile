@@ -13,4 +13,5 @@ CMD ["python3", "services/bot/app.py"]
 #COPY . .
 #RUN pip install -r requirements.txt
 #$45664655
+#
 #CMD ["python3", "app.py"]
