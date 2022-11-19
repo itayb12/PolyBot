@@ -1,9 +1,11 @@
+properties([parameters([string('BOT_IMAGE_NAME')])])
+
 pipeline {
     agent {
         docker {
-            // TODO build & push your Jenkins agent image, place the URL here
-            image '<jenkins-agent-image>'
-            args  '--user root -v /var/run/docker.sock:/var/run/docker.sock'
+        label 'jenkins-general-docker'
+        image '352708296901.dkr.ecr.eu-west-1.amazonaws.com/zoharn-jenkins-agent:1'
+        args  '--user root -v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
 
@@ -11,9 +13,9 @@ pipeline {
         APP_ENV = "dev"
     }
 
-    parameters {
-        string(name: 'BOT_IMAGE_NAME')
-    }
+//     parameters {
+//         string(name: 'BOT_IMAGE_NAME')
+//     }
 
     stages {
         stage('Bot Deploy') {
