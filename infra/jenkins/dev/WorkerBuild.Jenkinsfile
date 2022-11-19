@@ -18,7 +18,7 @@ pipeline {
     REGISTRY_URL = "352708296901.dkr.ecr.eu-west-1.amazonaws.com"
     IMAGE_TAG = "0.0.$BUILD_NUMBER"
     IMAGE_NAME = "zoharn007-worker"
-    WORKSPACE = "/var/lib/jenkins/workspace/workerBuild/services"
+    WORKSPACE = "/var/lib/jenkins/workspace/WorkerBuild/services"
 
     }
 
