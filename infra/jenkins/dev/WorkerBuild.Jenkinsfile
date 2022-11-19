@@ -18,16 +18,18 @@ pipeline {
     REGISTRY_URL = "352708296901.dkr.ecr.eu-west-1.amazonaws.com"
     IMAGE_TAG = "0.0.$BUILD_NUMBER"
     IMAGE_NAME = "zoharn007-worker"
-    WORKSPACE = "/var/lib/jenkins/workspace/workerBuild/services"
+    WORKSPACE = "/var/lib/jenkins/workspace/WorkerBuild/services"
 
     }
 
     stages {
-        stage('workerBuild') {
+        stage('WorkerBuild') {
             steps {
 
                 sh '''
                 aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin $REGISTRY_URL
+                ls
+                pwd
                 cd /home/ec2-user/workspace/dev/WorkerBuild/services/worker/
                 docker build -t $IMAGE_NAME:$IMAGE_TAG .
 
@@ -38,7 +40,7 @@ pipeline {
     stage('Snyx Check') {
     steps {
             withCredentials([string(credentialsId: 'Snyx', variable: 'SNYK_TOKEN')]) {
-                sh 'snyk container test $IMAGE_NAME:$IMAGE_TAG --severity-threshold=critical --file=/home/ec2-user/workspace/dev/WorkerBuild/services/bot/Dockerfile'
+                sh 'snyk container test $IMAGE_NAME:$IMAGE_TAG --severity-threshold=critical --file=/home/ec2-user/workspace/dev/WorkerBuild/services/worker/Dockerfile'
             }
         }
     }
@@ -60,9 +62,9 @@ pipeline {
         }
    }
 
-        stage('Trigger workerDeploy') {
+        stage('Trigger WorkerDeploy') {
             steps {
-                build job: 'workerDeploy', wait: false, parameters: [
+                build job: 'WorkerDeploy', wait: false, parameters: [
                     string(name: 'WORKER_IMAGE_NAME', value: "${REGISTRY_URL}/${IMAGE_NAME}:${IMAGE_TAG}")
                 ]
             }

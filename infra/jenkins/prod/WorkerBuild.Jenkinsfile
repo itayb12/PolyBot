@@ -28,7 +28,7 @@ pipeline {
 
                 sh '''
                 aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin $REGISTRY_URL
-                cd /home/ec2-user/workspace/dev/workerBuild/services/worker/
+                cd /home/ec2-user/workspace/prod/workerBuild/services/worker/
                 docker build -t $IMAGE_NAME:$IMAGE_TAG .
 
                 '''
@@ -38,7 +38,7 @@ pipeline {
     stage('Snyx Check') {
     steps {
             withCredentials([string(credentialsId: 'Snyx', variable: 'SNYK_TOKEN')]) {
-                sh 'snyk container test $IMAGE_NAME:$IMAGE_TAG --severity-threshold=critical --file=/home/ec2-user/workspace/dev/workerBuild/services/bot/Dockerfile'
+                sh 'snyk container test $IMAGE_NAME:$IMAGE_TAG --severity-threshold=critical --file=/home/ec2-user/workspace/prod/workerBuild/services/bot/Dockerfile'
             }
         }
     }
@@ -60,9 +60,9 @@ pipeline {
         }
    }
 
-        stage('Trigger workerDeploy') {
+        stage('Trigger WorkerDeploy') {
             steps {
-                build job: 'workerDeploy', wait: false, parameters: [
+                build job: 'WorkerDeploy', wait: false, parameters: [
                     string(name: 'WORKER_IMAGE_NAME', value: "${REGISTRY_URL}/${IMAGE_NAME}:${IMAGE_TAG}")
                 ]
             }
