@@ -12,5 +12,5 @@ CMD ["python3", "services/bot/app.py"]
 #ENV APP_PATH=/var/lib/jenkins/workspace/BotBuild/services
 #COPY . .
 #RUN pip install -r requirements.txt
-#$456646
+#$4566465
 #CMD ["python3", "app.py"]
