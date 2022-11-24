@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
         label 'jenkins-general-docker'
-        image '352708296901.dkr.ecr.eu-west-1.amazonaws.com/zoharn-jenkins-agent:1'
+        image '352708296901.dkr.ecr.eu-central-1.amazonaws.com/itay-jenkins'
         args  '--user root -v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
@@ -14,9 +14,9 @@ pipeline {
     }
 
     environment {
-    REGISTRY_URL = "352708296901.dkr.ecr.eu-west-1.amazonaws.com"
+    REGISTRY_URL = "352708296901.dkr.ecr.eu-central-1.amazonaws.com"
     IMAGE_TAG = "0.0.$BUILD_NUMBER"
-    IMAGE_NAME = "zoharn007-bot"
+    IMAGE_NAME = "itay-bot"
     WORKSPACE = "/home/ec2-user/workspace/prod/BotBuild/"
     }
 

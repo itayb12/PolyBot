@@ -1,10 +1,10 @@
-// properties([parameters([string('WORKER_IMAGE_NAME')])])
+properties([parameters([string('WORKER_IMAGE_NAME')])])
 
 pipeline {
     agent {
         docker {
         label 'jenkins-general-docker'
-        image '352708296901.dkr.ecr.eu-west-1.amazonaws.com/zoharn-jenkins-agent:1'
+        image '352708296901.dkr.ecr.eu-central-1.amazonaws.com/itay-jenkins'
         args  '--user root -v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
