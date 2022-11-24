@@ -13,9 +13,9 @@ pipeline {
         APP_ENV = "prod"
     }
 
-    parameters {
-        string(name: 'WORKER_IMAGE_NAME')
-    }
+//     parameters {
+//         string(name: 'WORKER_IMAGE_NAME')
+//     }
 
     stages {
         stage('Worker Deploy') {
