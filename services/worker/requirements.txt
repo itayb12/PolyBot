@@ -6,4 +6,3 @@ unittest2
 pylint_junit
 pylint
 boto3
-botocore

@@ -1,5 +1,5 @@
 {
   "aws_region": "eu-central-1",
-  "videos_bucket": "zoharns3videosbucket",
-  "bot_to_worker_queue_name": "ZOHARN_BOT_TO_WORKER_SQS"
+  "videos_bucket": "itay-bucket1",
+  "bot_to_worker_queue_name": "itay-SQS"
 }
