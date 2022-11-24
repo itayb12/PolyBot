@@ -25,7 +25,7 @@ pipeline {
             steps {
 
                 sh '''
-                aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin $REGISTRY_URL
+                aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin
                 ls
                 pwd
                 cd $WORKSPACE
