@@ -3,7 +3,7 @@ properties([parameters([string('BOT_IMAGE_NAME')])])
 pipeline {
     agent {
         docker {
-        label 'jenkins-general-docker'
+        label 'jenkins-general-docker-itay'
         image '352708296901.dkr.ecr.eu-central-1.amazonaws.com/itay-jenkins:1'
         args  '--user root -v /var/run/docker.sock:/var/run/docker.sock'
         }
